@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "React Explained in 100 Seconds",
+    "url": "https://www.youtube.com/watch?v=Tn6-PIqc4UM"
+  },
+  {
+    "id": "2",
+    "title": "Next.js 13 Crash Course",
+    "url": "https://www.youtube.com/watch?v=__mSgDEOyv8"
+  },
+  {
+    "id": "3",
+    "title": "Styled Components Tutorial",
+    "url": "https://www.youtube.com/watch?v=02zO0hZmwnw"
+  }
+]
