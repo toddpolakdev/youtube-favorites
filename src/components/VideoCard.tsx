@@ -8,27 +8,31 @@ type VideoCardProps = {
 };
 
 const Card = styled.div`
-  background: #fff;
+  width: 220px;
+  background: ${({ theme }) => theme.cardBg};
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 `;
 
 const Thumbnail = styled.img`
   width: 100%;
+  height: 140px;
+  object-fit: cover;
   display: block;
 `;
 
 const Title = styled.h3`
   padding: 0.75rem;
-  font-size: 1rem;
-  color: #333;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.text};
+  text-align: left;
 `;
 
 const VideoCard: React.FC<VideoCardProps> = ({ title, url }) => {

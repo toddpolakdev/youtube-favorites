@@ -5,16 +5,23 @@ import VideoGrid from "../components/VideoGrid";
 
 const Wrapper = styled.div`
   min-height: 100vh;
+  width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+  padding: 2rem;
 `;
 
 const Container = styled.div`
   width: 100%;
   max-width: 960px;
+  margin: 0 auto;
   padding: 2rem;
+  background: ${({ theme }) => theme.cardBg};
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 `;
 
 const Header = styled.div`
@@ -102,7 +109,7 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
     <Wrapper>
       <Container>
         <Header>
-          <h1>📺 My YouTube Favorites</h1>
+          <h1>My YouTube Favorites</h1>
           <ToggleButton onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
           </ToggleButton>
