@@ -5,7 +5,6 @@ import VideoGrid from "../components/VideoGrid";
 
 const Wrapper = styled.div`
   min-height: 100vh;
-  width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

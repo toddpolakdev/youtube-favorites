@@ -14,9 +14,17 @@ type VideoGridProps = {
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, 220px);
   gap: 1.5rem;
   justify-content: center;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 220px);
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, 220px);
+  }
 `;
 
 const VideoGrid: React.FC<VideoGridProps> = ({ videos }) => {
