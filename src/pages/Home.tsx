@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import favorites from "../data/favorites.json";
 import VideoGrid from "../components/VideoGrid";
+import VideoModal from "../components/VideoModal";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -88,6 +89,7 @@ type HomeProps = {
 
 const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
   const [videos, setVideos] = useState<Video[]>(favorites);
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [input, setInput] = useState("");
 
   const handleAdd = (e: React.FormEvent) => {
@@ -125,7 +127,11 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
           <button type="submit">Add</button>
         </Form>
 
-        <VideoGrid videos={videos} />
+        <VideoGrid videos={videos} onSelect={(url) => setActiveVideo(url)} />
+
+        {activeVideo && (
+          <VideoModal url={activeVideo} onClose={() => setActiveVideo(null)} />
+        )}
       </Container>
     </Wrapper>
   );

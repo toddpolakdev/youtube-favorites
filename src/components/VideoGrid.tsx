@@ -10,6 +10,7 @@ type Video = {
 
 type VideoGridProps = {
   videos: Video[];
+  onSelect: (url: string) => void;
 };
 
 const Grid = styled.div`
@@ -27,11 +28,16 @@ const Grid = styled.div`
   }
 `;
 
-const VideoGrid: React.FC<VideoGridProps> = ({ videos }) => {
+const VideoGrid: React.FC<VideoGridProps> = ({ videos, onSelect }) => {
   return (
     <Grid>
       {videos.map((video) => (
-        <VideoCard key={video.id} title={video.title} url={video.url} />
+        <VideoCard
+          key={video.id}
+          title={video.title}
+          url={video.url}
+          onClick={() => onSelect(video.url)}
+        />
       ))}
     </Grid>
   );

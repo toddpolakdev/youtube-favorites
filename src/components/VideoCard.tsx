@@ -5,6 +5,7 @@ import { getThumbnail } from "../utils/getThumbnail";
 type VideoCardProps = {
   title: string;
   url: string;
+  onClick: () => void;
 };
 
 const Card = styled.div`
@@ -35,9 +36,9 @@ const Title = styled.h3`
   text-align: left;
 `;
 
-const VideoCard: React.FC<VideoCardProps> = ({ title, url }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ title, url, onClick }) => {
   return (
-    <Card onClick={() => window.open(url, "_blank")}>
+    <Card onClick={onClick}>
       <Thumbnail src={getThumbnail(url)} alt={title} />
       <Title>{title}</Title>
     </Card>
