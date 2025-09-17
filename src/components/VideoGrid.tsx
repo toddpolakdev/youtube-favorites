@@ -11,7 +11,7 @@ type Video = {
 type VideoGridProps = {
   videos: Video[];
   onSelect: (url: string) => void;
-  canFavorite: boolean;
+  canFavorite?: boolean;
 };
 
 const Grid = styled.div`
@@ -32,7 +32,7 @@ const Grid = styled.div`
 const VideoGrid: React.FC<VideoGridProps> = ({
   videos,
   onSelect,
-  canFavorite,
+  canFavorite = false,
 }) => {
   return (
     <Grid>
