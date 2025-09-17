@@ -1,8 +1,31 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import favorites from "../data/favorites.json";
 import VideoGrid from "../components/VideoGrid";
 import VideoModal from "../components/VideoModal";
+import LoginButton from "../components/LoginButton";
+import LogoutButton from "../components/LogoutButton";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { auth } from "../firebase";
+import { getFavorites } from "../services/firestore";
+
+const Title = styled.h1`
+  background: linear-gradient(
+    to right,
+    #5c002f,
+    #57001d,
+    #28006d,
+    #004479,
+    #003e46,
+    #003a02,
+    #1d2000,
+    #513200,
+    #1e0700
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -91,6 +114,8 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
   const [videos, setVideos] = useState<Video[]>(favorites);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [input, setInput] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,14 +131,43 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
     setInput("");
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+
+      if (currentUser) {
+        // Load from Firestore
+        const favs = await getFavorites(currentUser.uid);
+        const mapped = favs.map((fav: any) => ({
+          id: fav.id,
+          title: "Saved Video",
+          url: fav.videoUrl,
+        }));
+        setVideos(mapped);
+      } else {
+        // Fallback to local JSON if not logged in
+        setVideos(favorites);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Wrapper>
       <Container>
         <Header>
-          <h1>My YouTube Favorites</h1>
+          <Title>My YouTube Favorites</Title>
           <ToggleButton onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
           </ToggleButton>
+          {user ? (
+            <div>
+              <LogoutButton />
+            </div>
+          ) : (
+            <LoginButton />
+          )}
         </Header>
 
         <Form onSubmit={handleAdd}>
@@ -127,7 +181,15 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
           <button type="submit">Add</button>
         </Form>
 
-        <VideoGrid videos={videos} onSelect={(url) => setActiveVideo(url)} />
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <VideoGrid
+            videos={videos}
+            onSelect={(url) => setActiveVideo(url)}
+            canFavorite={!!user} // pass whether favorite is allowed
+          />
+        )}
 
         {activeVideo && (
           <VideoModal url={activeVideo} onClose={() => setActiveVideo(null)} />

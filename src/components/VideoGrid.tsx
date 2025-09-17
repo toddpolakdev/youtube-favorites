@@ -11,6 +11,7 @@ type Video = {
 type VideoGridProps = {
   videos: Video[];
   onSelect: (url: string) => void;
+  canFavorite: boolean;
 };
 
 const Grid = styled.div`
@@ -28,15 +29,21 @@ const Grid = styled.div`
   }
 `;
 
-const VideoGrid: React.FC<VideoGridProps> = ({ videos, onSelect }) => {
+const VideoGrid: React.FC<VideoGridProps> = ({
+  videos,
+  onSelect,
+  canFavorite,
+}) => {
   return (
     <Grid>
       {videos.map((video) => (
         <VideoCard
           key={video.id}
+          videoId={video.id}
           title={video.title}
-          url={video.url}
+          videoUrl={video.url}
           onClick={() => onSelect(video.url)}
+          canFavorite={canFavorite}
         />
       ))}
     </Grid>
