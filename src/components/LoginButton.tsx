@@ -5,12 +5,7 @@ import styled from "styled-components";
 
 export default function LoginButton() {
   const handleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      console.log("User:", result.user);
-    } catch (error) {
-      console.error("Login error:", error);
-    }
+    await signInWithPopup(auth, googleProvider);
   };
 
   const LoginButton = styled.button`

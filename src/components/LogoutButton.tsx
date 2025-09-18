@@ -5,12 +5,7 @@ import styled from "styled-components";
 
 export default function LogoutButton() {
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      alert("Signed out successfully!");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
+    await signOut(auth);
   };
 
   const LogoutButton = styled.button`
