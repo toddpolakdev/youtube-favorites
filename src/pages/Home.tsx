@@ -8,7 +8,8 @@ import LoginButton from "../components/LoginButton";
 import LogoutButton from "../components/LogoutButton";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../firebase";
-import { getFavorites } from "../services/firestore";
+import { getFavorites, saveFavorite } from "../services/favorites";
+import { getYouTubeId } from "../utils/getThumbnail";
 
 const Title = styled.h1`
   background: linear-gradient(
@@ -117,18 +118,37 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleAdd = (e: React.FormEvent) => {
+  const loadFavorites = async () => {
+    const favs = await getFavorites();
+    const mapped = favs.map((fav: any) => ({
+      id: fav.id,
+      title: "Saved Video",
+      url: fav.videoUrl,
+    }));
+    setVideos(mapped);
+  };
+
+  const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
 
-    const newVideo: Video = {
-      id: Date.now().toString(),
-      title: "New Favorite Video",
-      url: input.trim(),
-    };
+    const url = input.trim();
+    if (!url) return;
 
-    setVideos([newVideo, ...videos]);
+    if (!user) {
+      alert("Please sign in to save favorites.");
+      return;
+    }
+
+    const videoId = getYouTubeId(url);
+    if (!videoId) {
+      alert("That doesn't look like a valid YouTube link.");
+      return;
+    }
+
+    await saveFavorite(videoId, url);
     setInput("");
+    // Re-fetch so the list reflects what's actually persisted.
+    await loadFavorites();
   };
 
   useEffect(() => {
@@ -137,14 +157,7 @@ const Home: React.FC<HomeProps> = ({ darkMode, setDarkMode }) => {
       setLoading(false);
 
       if (currentUser) {
-        // Load from Firestore
-        const favs = await getFavorites(currentUser.uid);
-        const mapped = favs.map((fav: any) => ({
-          id: fav.id,
-          title: "Saved Video",
-          url: fav.videoUrl,
-        }));
-        setVideos(mapped);
+        await loadFavorites();
       } else {
         // Fallback to local JSON if not logged in
         setVideos(favorites);

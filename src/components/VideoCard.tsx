@@ -5,7 +5,7 @@ import {
   saveFavorite,
   removeFavorite,
   isFavorite,
-} from "../services/firestore";
+} from "../services/favorites";
 import { auth } from "../firebase";
 import { FaRegStar, FaStar } from "react-icons/fa";
 
@@ -76,10 +76,7 @@ const VideoCard: React.FC<VideoCardProps> = ({
 
   useEffect(() => {
     if (user) {
-      isFavorite(user.uid, videoId).then(
-        (exists: boolean | ((prevState: boolean) => boolean)) =>
-          setFavorite(exists)
-      );
+      isFavorite(videoId).then((exists: boolean) => setFavorite(exists));
     }
   }, [user, videoId]);
 
@@ -90,10 +87,10 @@ const VideoCard: React.FC<VideoCardProps> = ({
     }
 
     if (favorite) {
-      await removeFavorite(user.uid, videoId);
+      await removeFavorite(videoId);
       setFavorite(false);
     } else {
-      await saveFavorite(user.uid, videoId, videoUrl);
+      await saveFavorite(videoId, videoUrl);
       setFavorite(true);
     }
   };

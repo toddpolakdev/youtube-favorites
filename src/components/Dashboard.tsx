@@ -6,7 +6,7 @@ import VideoModal from "../components/VideoModal";
 import LogoutButton from "../components/LogoutButton";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../firebase";
-import { getFavorites } from "../services/firestore";
+import { getFavorites } from "../services/favorites";
 
 // 🔹 Reuse styled components
 const Wrapper = styled.div`
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
       setUser(currentUser);
 
       if (currentUser) {
-        getFavorites(currentUser.uid).then((favs: any) => {
+        getFavorites().then((favs: any) => {
           // Map Firestore docs to Video type
           const mapped = favs.map((fav: any) => ({
             id: fav.id,
